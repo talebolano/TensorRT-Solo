@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
         {0,0,0,0}
     };
 
-    while((opt=getopt_long_only(argc,argv,"e:i:o:s:",opts,&option_index))!=-1)
+    while((opt=getopt_long_only(argc,argv,"e:i:o:vs",opts,&option_index))!=-1)
     {
         switch (opt)
         {
