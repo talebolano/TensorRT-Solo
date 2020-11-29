@@ -59,6 +59,10 @@ int get_cate_ind_gpu(float* cate_perds,float* kernel_pred,
     int ind_size;
     ind_size = thrust::count_if(thrust::device,cate_perds,cate_perds+cate_pred_shape[0]*cate_pred_shape[1],is_morethan_thresh());
     cudaDeviceSynchronize();
+    if (ind_size==0){
+
+        return ind_size;
+    }
 
     int*g_temp_index;
     cudaMalloc((void**)&g_temp_index,cate_pred_shape[0]*cate_pred_shape[1]*sizeof(int));
@@ -284,6 +288,13 @@ __global__ void get_sorted_all_need_kernel(float*cate_labels,float*sum_masks,flo
 
 }
 
+struct is_morethan_thresh_zero
+{
+    __host__ __device__
+    bool operator()(float &x){
+        return x>0.; 
+    }
+};
 
 void argsort_all_need_gpu(float*cate_scores,float*seg_masks,float*seg_preds,float*sum_masks,
             float*cate_labels,int& ind_size,
@@ -304,8 +315,14 @@ void argsort_all_need_gpu(float*cate_scores,float*seg_masks,float*seg_preds,floa
     thrust::stable_sort_by_key(thrust::device,cate_scores,cate_scores+ind_size,g_temp_index,thrust::greater<float>());
     cudaDeviceSynchronize();
 
-    ind_size = thrust::count_if(thrust::device,cate_scores,cate_scores+ind_size,is_morethan_thresh());
+    ind_size = thrust::count_if(thrust::device,cate_scores,cate_scores+ind_size,is_morethan_thresh_zero());
     cudaDeviceSynchronize();
+
+    if (ind_size==0){
+        cudaFree(g_temp_index);
+        return;
+    }
+
     if (ind_size>max_per_img){
         ind_size=max_per_img;
     }
@@ -565,18 +582,15 @@ void matrix_nms_gpu(float*seg_masks,float*cate_labels, float*cate_scores,float*s
 int postprocessing_gpu(float* mask_pred, float*cate_pred,float* kernel_pred,
     float*&seg_preds_cpu,float*&cate_labels_cpu,float*&cate_scores_cpu){
     int ind_size =0 ;
-    //int*g_ind_size;
     float *g_cate_scores;
     float*g_cate_label;
     float*g_kernel;
 
     cudaError err;
-    //cudaMalloc((void**)&g_ind_size,1*sizeof(int));
+
     cudaMalloc((void**)&g_cate_scores,cate_pred_size*sizeof(float));
     cudaMalloc((void**)&g_cate_label,cate_pred_size*sizeof(float));
     cudaMalloc((void**)&g_kernel,kernel_pred_size*sizeof(float));
-
-    
 
     ind_size= get_cate_ind_gpu(cate_pred,kernel_pred,g_cate_scores,g_cate_label,g_kernel);
 
@@ -588,7 +602,6 @@ int postprocessing_gpu(float* mask_pred, float*cate_pred,float* kernel_pred,
 
         return ind_size;
     }
-
 
     float*g_seg_dst;
     float*g_seg_masks;
@@ -611,15 +624,18 @@ int postprocessing_gpu(float* mask_pred, float*cate_pred,float* kernel_pred,
     cudaFree(g_seg_dst);
     cudaFree(g_cate_label);
 
-    start_time = std::chrono::high_resolution_clock::now();
-    matrix_nms_gpu(sort_seg_masks,sort_cate_labels,g_cate_scores,sort_sum_masks,ind_size);
+    if(ind_size==0){
+        cudaFree(g_cate_scores);
+        cudaFree(g_seg_masks);
+        cudaFree(g_sum_masks);
+        return ind_size;
+    }
 
+    matrix_nms_gpu(sort_seg_masks,sort_cate_labels,g_cate_scores,sort_sum_masks,ind_size);
 
     cate_scores_cpu = (float*)calloc(ind_size,sizeof(float));
     cate_labels_cpu = (float*)calloc(ind_size,sizeof(float));
     seg_preds_cpu = (float*)calloc(ind_size*h_w,sizeof(float));
-
-    start_time = std::chrono::high_resolution_clock::now();
 
     cudaMemcpy(cate_labels_cpu,sort_cate_labels,ind_size*sizeof(float),cudaMemcpyDeviceToHost);
     cudaMemcpy(cate_scores_cpu,g_cate_scores,ind_size*sizeof(float),cudaMemcpyDeviceToHost);

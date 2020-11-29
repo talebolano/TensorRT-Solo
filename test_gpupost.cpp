@@ -1,13 +1,13 @@
-#include"include/trt.h"
+#include"trt.h"
 #include<getopt.h>
 #include<opencv2/opencv.hpp>
 #include<string>
 #include<vector>
 #include<numeric>
 #include<algorithm>
-#include"include/config.h"
-#include"include/postprocess.h"
-#include"include/postprocess_gpu.h"
+#include"config.h"
+#include"postprocess.h"
+#include"postprocess_gpu.h"
 #include<chrono>
 
 
