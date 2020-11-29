@@ -205,21 +205,6 @@ def forward(self, inputs): #mask head
     return feature_pred
 
 
-from torchvision.transforms import Normalize
-
-
-class Nrom(nn.Module):
-    def __init__(self):
-        super(Nrom,self).__init__()
-        self.mean = [0.485,0.456,0.406]
-        self.std = [0.299,0.224,0.225]
-        self.normal = Normalize(self.mean,self.std)
-    def forward(self,x):
-        x = x.squeeze(0)
-        x = x/255.
-        return self.normal(x).unsqueeze(0)
-
-
 def main_forward(self,x):
     x = self.extract_feat(x)
     outs = self.bbox_head(x, eval=True)
@@ -237,7 +222,7 @@ def main_forward(self,x):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='MMDet test detector')
+    parser = argparse.ArgumentParser(description='get solo onnx model')
     parser.add_argument('--config', help='test config file path')
     parser.add_argument('--checkpoint', help='checkpoint file')
     parser.add_argument('--outputname',help="output name")
