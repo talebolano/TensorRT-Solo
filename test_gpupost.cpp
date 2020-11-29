@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
         {"inputs",required_argument,nullptr,'i'},
         {"output",required_argument,nullptr,'o'},
         {"show",no_argument,nullptr,'v'},
-        {"save",no_argument,nullptr,'s'}
+        {"save",no_argument,nullptr,'s'},
         {0,0,0,0}
     };
 

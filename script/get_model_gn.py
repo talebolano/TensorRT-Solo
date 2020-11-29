@@ -240,9 +240,6 @@ def main():
     cfg.model.pretrained = None
     cfg.data.test.test_mode = True
     global numclass
-    global usenorm
-    numclass = args.numclass
-    usenorm = args.usenorm
     # build the model and load checkpoint
     model = build_detector(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
 
