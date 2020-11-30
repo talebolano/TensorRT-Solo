@@ -13,6 +13,7 @@ TensorRT for Solo
     jetpack 4.4
     CUDA 10.0
     TensorRT7.1
+    pytorch1.4
 
 ## Usage
 
@@ -35,7 +36,7 @@ TensorRT for Solo
     cd build
     ./cuda_engine -i ../solo_r101.onnx -o solo_r101_fp16.engine
 
-### test
+### Test
 
     ./infer_gpupost -e solo_r101_fp16.engine -i ../data/demo.jpg -show -save
 
