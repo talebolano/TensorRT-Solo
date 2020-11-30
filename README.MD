@@ -28,7 +28,7 @@ TensorRT for Solo
 ### Convert solo model form pytorch to onnx
 
     cd ..
-    python3 script/get_model_gn.py --config ${SOLO pwd}/configs/solov2_r101_fpn_8gpu_3x.py --checkpoint SOLOv2_R101_3x.pth --outputname solo_r101.onnx 
+    python3 script/get_model_gn.py --config ${SOLO}/configs/solov2_r101_fpn_8gpu_3x.py --checkpoint SOLOv2_R101_3x.pth --outputname solo_r101.onnx 
 
 ### Generate engine
 
