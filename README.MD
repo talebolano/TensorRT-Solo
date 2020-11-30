@@ -33,7 +33,7 @@ TensorRT for Solo
 ### Generate engine
 
     cd build
-    ./cuda_engine -i ../solo_r101_onnx -o solo_r101_fp16.engine
+    ./cuda_engine -i ../solo_r101.onnx -o solo_r101_fp16.engine
 
 ### test
 
