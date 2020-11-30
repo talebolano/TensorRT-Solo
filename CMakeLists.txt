@@ -11,7 +11,7 @@ add_subdirectory(src)
 find_package(CUDA REQUIRED)
 find_package(OpenCV REQUIRED)
 
-include_directories(${CMAKE_CURRENT_SOURVE_DIR}/include)
+include_directories(./include)
 include_directories(${OPENCV_INCLUDE_DIRS})
 
 link_directories(${OpenCV_LIBRARIES_DIRS})
