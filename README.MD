@@ -37,7 +37,7 @@ TensorRT for Solo
 
 ### test
 
-    ./infer_gpupost -e solo_r101_fp16.engine -i data/demo.jpg -show -save
+    ./infer_gpupost -e solo_r101_fp16.engine -i ../data/demo.jpg -show -save
 
 ## inference performance
 
