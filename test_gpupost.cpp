@@ -109,7 +109,7 @@ int main(int argc, char* argv[]){
         }
 
         if(show){
-            cv::namedWindow("output",1);
+            cv::namedWindow("output image",1);
         }
         
         cv::Mat input_image;
