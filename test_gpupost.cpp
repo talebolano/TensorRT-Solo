@@ -208,7 +208,7 @@ int main(int argc, char* argv[]){
             if(show){
                 cv::namedWindow("output image",1);
                 vis_seg(outputimage,seg_preds_cpu,cate_labels_cpu,cate_scores_cpu,ind_size,output_name,save,true);
-                cv::destroyAllWindows();
+            
             }
             else
             {
@@ -232,6 +232,8 @@ int main(int argc, char* argv[]){
             std::cout<<"vis spend time "<<total<<" ms"<<std::endl;
 
         }
+        if(show){
+            cv::destroyAllWindows();}
 
     }
     
